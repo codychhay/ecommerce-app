@@ -1,17 +1,25 @@
 import React from 'react'
+import {BrowserRouter, Route} from "react-router-dom"
 
 import HomePage from './components/pages/homepage/homepage.component'
 import Header from './components/header/header.component.jsx'
-
+import Shop from './components/pages/shop/shop.component'
+import Contact from './components/pages/contact/contact.component'
+import SignInAndSignUp from './components/pages/signin-and-signup/signin-and-signup.component'
 
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-        <Header />
-        <HomePage/>
-    </div>
+      <BrowserRouter>
+          <div className="App">
+              <Header />
+              <Route path="/" exact component={HomePage} />
+              <Route path="/shop" component={Shop} />
+              <Route path="/contact" component={Contact} />
+              <Route path="/signin" component={SignInAndSignUp} />
+          </div>
+      </BrowserRouter>
   );
 }
 
