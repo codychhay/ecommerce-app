@@ -9,10 +9,11 @@ import SignInAndSignUp from './components/pages/signin-and-signup/signin-and-sig
 
 import './App.css';
 
-import {auth} from './firebase/firebase.utils'
+import {auth, createUserProfileDocument} from './firebase/firebase.utils'
 
 class App extends React.Component {
-    // NOTE-- Storing logged-in user in App cuz here we can pass it to other components that needs the info
+    // Design/Impl decision note
+    // -- Storing logged-in user in App cuz here we can pass it to other components that needs the info
 
     unsubscribeFromAuth = null;
 
@@ -25,9 +26,22 @@ class App extends React.Component {
 
     componentDidMount() {
         // Subscribe to state changes
-        this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-           this.setState({currentUser: user});
-           console.log(user);
+        this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+            if(userAuth) {
+                const userRef = await createUserProfileDocument(userAuth);
+                userRef.onSnapshot(snapshot => {
+                    this.setState({
+                        currentUser: {
+                            id: snapshot.id,
+                            ...snapshot.data()
+                        }
+                    });
+                });
+            } else {
+                // If userAuth is null, meaning user signed out. So we want to set currentUser 
+                // to null.
+                this.setState({currentUser: userAuth});
+            }
         });
     }
 
