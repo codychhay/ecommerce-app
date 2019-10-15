@@ -1,5 +1,5 @@
 import React from 'react'
-import {Route, Switch} from "react-router-dom"
+import {Route, Switch, Redirect} from "react-router-dom"
 import {connect} from 'react-redux';
 
 import HomePage from './components/pages/homepage/homepage.component'
@@ -19,13 +19,6 @@ class App extends React.Component {
     // -- Storing logged-in user in App cuz here we can pass it to other components that needs the info
 
     unsubscribeFromAuth = null;
-
-    constructor() {
-        super();
-        this.state= {
-            currentUser: null
-        }
-    }
 
     componentDidMount() {
         // coming from app connected component
@@ -62,7 +55,10 @@ class App extends React.Component {
                     <Route exact path="/" component={HomePage} />
                     <Route path="/shop" component={Shop} />
                     <Route path="/contact" component={Contact} />
-                    <Route path="/signin" component={SignInAndSignUp} />
+                    <Route path="/signin" render={() => this.props.currentUser ? 
+                        (<Redirect to='/'/>) : 
+                        (<SignInAndSignUp />)} 
+                    />
                 </Switch>
             </div>
         );
@@ -70,8 +66,12 @@ class App extends React.Component {
 
 }
 
+const mapStateToProps = state => ({
+    currentUser : state.user.currentUser
+})
+
 const mapDispatchToProps = dispatch => ({
     setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
