@@ -1,9 +1,13 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
+import {createStructuredSelector} from 'reselect';
+
 
 import CartIcon from '../cart-icon/cart-icon.component'
 import CardDropdown from '../cart-dropdown/cart-dropdown.component'
+import {selectCurrentUser} from '../../redux/user/user.selectors';
+import {selectCartHidden} from '../../redux/cart/cart.selectors';
 
 import {ReactComponent as Logo} from "../../assets/crown.svg"
 
@@ -34,16 +38,23 @@ const Header = ({ currentUser, hidden }) => (
         { hidden ? null : <CardDropdown /> }
     </div>
 )
+
 // One way-- accept state from redux without destructuring
-const mapStateToProps = state => ({
-        currentUser: state.user.currentUser,
-        hidden: state.cart.hidden
-});
+// const mapStateToProps = state => ({
+//         currentUser: state.user.currentUser,
+//         hidden: state.cart.hidden
+// });
 
 // Second way-- destructure nested object and using ES6 same name property
 // const mapStateToProps = ({user:{currentUser}, cart: {hidden}}) => ({
 //         currentUser,
 //         hidden
 // });
+
+// using memoized selector to prevent re-rednering of component if not needed
+const mapStateToProps = createStructuredSelector({
+        currentUser: selectCurrentUser,
+        hidden: selectCartHidden
+})
 
 export default connect(mapStateToProps)(Header);
