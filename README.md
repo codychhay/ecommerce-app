@@ -1,1 +1,1 @@
- Please refer to this link to browser the clothing-app: https://cody-clothing-live.herokuapp.com/
+ Please refer to this link to browse the clothing-app: https://cody-clothing-live.herokuapp.com/
